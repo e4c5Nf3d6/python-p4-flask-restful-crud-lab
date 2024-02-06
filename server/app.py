@@ -48,14 +48,16 @@ class PlantByID(Resource):
         return make_response(jsonify(plant), 200)
     
     def patch(self, id):
-        record = Plant.query.filter_by(id=id).first()
-        for attr in request.form:
-            setattr(record, attr, request.form[attr])
+        data = request.get_json()
+        plant = Plant.query.filter_by(id=id).first
 
-        db.session.add(record)
+        for attr in data:
+            setattr(plant, attr, request.form[attr])
+
+        db.session.add(plant)
         db.session.commit()
 
-        response_dict = record.to_dict()
+        response_dict = plant.to_dict()
 
         response = make_response(
             response_dict,
